@@ -53,7 +53,7 @@ secrets.yml
 month.txt
 
 # Include when developing application packages.
-pubspec.lock
+pubspec.lock 
 .c9
 .idea/
 .devcontainer/*
@@ -81,7 +81,7 @@ yarn-error.log
 # build-analytics
 .build-analytics
 
-# rollup-test output
+# rollup-test output 
 /modules/rollup-test/dist/
 
 # User specific bazel settings
