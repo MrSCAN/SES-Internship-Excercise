@@ -1,0 +1,288 @@
+<div>
+  <ul class="nav nav-tabs bg-success">
+    <li class="nav-item">
+      <a
+        [ngClass]="page == 'home' ? 'nav-link active' : 'nav-link text-white'"
+        (click)="changeView('home')"
+        >Home</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        [ngClass]="
+          page == 'new-user' ? 'nav-link active' : 'nav-link text-white'
+        "
+        (click)="changeView('new-user')"
+        >Add New User</a
+      >
+    </li>
+
+    <li class="nav-item">
+      <a
+        [ngClass]="
+          page == 'edit-user'
+            ? 'disabled nav-link active'
+            : 'nav-link disabled text-muted'
+        "
+        (click)="changeView('edit-user')"
+        >Edit User</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        [ngClass]="
+          page == 'multiple-users' ? 'nav-link active' : 'nav-link text-white'
+        "
+        (click)="changeView('multiple-users')"
+        >Generate Multiple Users</a
+      >
+    </li>
+  </ul>
+
+  <ng-template [ngIf]="page == 'home'">
+    <ng-template [ngIf]="users.length > 0">
+      <div class="container mt-4 col-6 rounded">
+        <ng-template [ngIf]="error">
+          <div class="alert alert-danger alert-dismissible">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+            <strong>Error!</strong> {{ errorMessage }}
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="success">
+          <div class="alert alert-success alert-dismissible">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+            <strong>Success!</strong> {{ successMessage }}
+          </div>
+        </ng-template>
+        <p>Users</p>
+        <table class="table table-hover table-responsive">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Firstname</th>
+              <th>Lastname</th>
+              <th>Edit</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let user of users">
+            <tr>
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.surName }}</td>
+              <td>
+                <button
+                  class="btn btn-primary"
+                  (click)="navigateToEditUser(user.id)"
+                >
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button class="btn btn-danger" (click)="deleteUser(user.id)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="container-fluid m-5">
+          <button
+            class="btn btn-success btn-block"
+            (click)="changeView('new-user')"
+          >
+            Add New User
+          </button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template [ngIf]="initialized && users.length == 0">
+      <div class="container p-5 my-5 bg-dark text-white">
+        <h1>No Users Available</h1>
+        <p>
+          Click
+          <button
+            type="button"
+            class="btn btn-outline-info"
+            (click)="changeView('new-user')"
+          >
+            Here
+          </button>
+          to create a user
+        </p>
+      </div>
+    </ng-template>
+  </ng-template>
+
+  <ng-template [ngIf]="page == 'multiple-users'">
+    <div class="container mt-3 col-3">
+      <ng-template [ngIf]="error">
+        <div class="alert alert-danger alert-dismissible">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+          <strong>Error!</strong> {{ errorMessage }}
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="success">
+        <div class="alert alert-success alert-dismissible">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+          <strong>Success!</strong> {{ successMessage }}
+        </div>
+      </ng-template>
+      <h2>Generate Users</h2>
+      <form action="#">
+        <div class="mb-3 mt-3">
+          <label for="email"
+            >Enter Number of new You users you want to generate:</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            id="count"
+            placeholder="Enter a postive numbers e.g. 5"
+            name="count"
+            [(ngModel)]="count"
+          />
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          (click)="generateMultipleUsers()"
+        >
+          Generate New Users
+        </button>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template [ngIf]="page == 'new-user'">
+    <div class="container mt-3 col-3">
+      <ng-template [ngIf]="error">
+        <div class="alert alert-danger alert-dismissible">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+          <strong>Error!</strong> {{ errorMessage }}
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="success">
+        <div class="alert alert-success alert-dismissible">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+          <strong>Success!</strong> {{ successMessage }}
+        </div>
+      </ng-template>
+      <h2>Add New User</h2>
+      <form action="#">
+        <div class="mb-3 mt-3">
+          <label for="name">Firstname:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            placeholder="Your Firstname"
+            name="name"
+            maxlength="255"
+            required
+            [(ngModel)]="name"
+          />
+        </div>
+        <div class="mb-3 mt-3">
+          <label for="surName">Lastname:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="surName"
+            placeholder="Your Lastname"
+            name="surName"
+            maxlength="255"
+            required
+            [(ngModel)]="surName"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="saveUser()">
+          Submit
+        </button>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template [ngIf]="page == 'edit-user'">
+    <div class="container mt-3 col-3">
+      <ng-template [ngIf]="error">
+        <div class="alert alert-danger alert-dismissible">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+          <strong>Error!</strong> {{ errorMessage }}
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="success">
+        <div class="alert alert-success alert-dismissible">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+          <strong>Success!</strong> {{ successMessage }}
+        </div>
+      </ng-template>
+      <h2>Edit User</h2>
+      <form action="#">
+        <div class="mb-3 mt-3">
+          <label for="name">Firstname:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            placeholder="Your Firstname"
+            name="name"
+            [value]="name"
+            maxlength="255"
+            [(ngModel)]="name"
+          />
+        </div>
+        <div class="mb-3 mt-3">
+          <label for="surName">Lastname:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="surName"
+            placeholder="Your Lastname"
+            name="surName"
+            maxlength="255"
+            [value]="surName"
+            [(ngModel)]="surName"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="editUser()">
+          Submit
+        </button>
+      </form>
+    </div>
+  </ng-template>
+</div>
+
+<router-outlet></router-outlet>
