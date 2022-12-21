@@ -137,7 +137,7 @@ export class AppComponent implements OnInit {
   }
 
   generateMultipleUsers() {
-    if (this.count != undefined && this.count <= 0) {
+    if (this.count == undefined || (this.count != undefined && this.count <= 0)) {
       this.error = true;
       this.errorMessage = 'Value must be greater than 0';
       return;

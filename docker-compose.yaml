@@ -18,7 +18,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - postgres
+      - links
     restart: unless-stopped
   user-service:
     image: 'ses-spring-boot-image'
@@ -38,8 +38,7 @@ services:
       DB_USERNAME: scan
       DB_PASSWORD: scan
     networks:
-      - postgres
-      - user-service
+      - links
   python-service:
     image: flask-middleware
     ports:
@@ -48,12 +47,10 @@ services:
         protocol: tcp
     expose:
       - 5000
-    volumes:
-      - .:/code
     depends_on:
       - user-service
     networks:
-      - user-service
+      - links
     environment:
       USER_SERVICE_URL: http://user-service:8083/api/v1/user
   angular-frontend:
@@ -65,6 +62,8 @@ services:
     depends_on:
       - user-service
       - python-service
+    networks:
+      - links
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -77,13 +76,12 @@ services:
     ports:
       - "5050:80"
     networks:
-      - postgres
+      - links
     restart: unless-stopped
 networks:
-  postgres:
+  links:
     driver: bridge
-  user-service:
-    driver: bridge
+
 
 volumes:
   postgres:

@@ -5,9 +5,6 @@ import { User } from './app.user';
 import { __values } from 'tslib';
 
 
-// const baseUrl = 'http://user-service:8083/api/v1/user';
-// const batchUrl = "http://python-service:5000/generate-users"
-
 const baseUrl = 'http://localhost:8083/api/v1/user';
 const batchUrl = "http://localhost:5000/generate-users"
 
